@@ -8,15 +8,46 @@
  * Emma Posamentier
  */
 
-var Palette = function() {
-	/* palette class for storing colors*/
+/* * * * * * * * * * * * * * * * * * * * * *
+ * Palette Class
+ * * * * * * * * * * * * * * * * * * * * * *
+ * Manages storing of colors and provides
+ * functionality on which ColorHeist is 
+ * built
+ */
+
+var Palette = function(colors, options) {
+	this.colors = colors;
+	this.options = options;
+}
+
+Palette.prototype.setColors = function(colors) {
+	this.colors = colors;
+}
+
+Palette.prototype.setOptions = function(options) {
+	this.options = options;
+}
+
+Palette.prototype.getDominantColor = function(){  
+	return this.colors[0];
+}
+
+Palette.prototype.getAllColors = function() {
+	return this.colors;
 }
 
 
-/* Base Class
+/* * * * * * * * * * * * * * * * * * * * * *
+ * Base Class
+ * * * * * * * * * * * * * * * * * * * * * *
+ * ColorHeist class called by user to genrate
+ * schemes. Supports default ColorThief methods
  */
+
 var ColorHeist = function() {
-	this.thief = new ColorThief()
+	this.thief   = new ColorThief();
+	this.palette = new Palette();
 }
 
 /* * * * * * * * * * * * * * * * * * * * * *
@@ -29,7 +60,11 @@ var ColorHeist = function() {
  * 
  * gets primary image color and returns it as an rgb
  */
-ColorHeist.prototype.getColor   = ColorThief.prototype.getColor
+ColorHeist.prototype.getColor   = function(image, quality) {
+	this.palette.setColors([this.thief.getColor(image, quality)]);
+	return this.palette.getDominantColor();
+
+}
 
 /*
  * getPalette(sourceImage[, colorCount, quality])
@@ -37,7 +72,10 @@ ColorHeist.prototype.getColor   = ColorThief.prototype.getColor
  * 
  * gets colorCount colors from the image
  */
-ColorHeist.prototype.getPalette = ColorThief.prototype.getPalette
+ColorHeist.prototype.getPalette = function(image, colorCount, quality) {
+	this.palette.setColors(this.thief.getPalette(image, colorCount, quality))
+	return this.palette.getAllColors()
+}
 
 
 /* 
