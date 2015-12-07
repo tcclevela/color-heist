@@ -9,7 +9,7 @@ var merge = require('merge-stream');
 var dest = 'dist/';
 var jsFiles = "src/color-heist.js"
 
-gulp.task('uglify', function(){
+gulp.task('default', function(){
 
     var bowerComponents = gulp.src('./bower.json')
         .pipe(mainBowerFiles())
