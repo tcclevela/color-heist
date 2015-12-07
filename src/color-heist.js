@@ -21,14 +21,6 @@ var Palette = function(colors, options) {
 	this.options = options;
 }
 
-Palette.prototype.setColors = function(colors) {
-	this.colors = colors;
-}
-
-Palette.prototype.setOptions = function(options) {
-	this.options = options;
-}
-
 Palette.prototype.getDominantColor = function(){  
 	return this.colors[0];
 }
@@ -61,8 +53,7 @@ var ColorHeist = function() {
  * gets primary image color and returns it as an rgb
  */
 ColorHeist.prototype.getColor   = function(image, quality) {
-	this.palette.setColors([this.thief.getColor(image, quality)]);
-	return this.palette.getDominantColor();
+	return this.thief.getColor(image, quality)
 
 }
 
@@ -73,14 +64,15 @@ ColorHeist.prototype.getColor   = function(image, quality) {
  * gets colorCount colors from the image
  */
 ColorHeist.prototype.getPalette = function(image, colorCount, quality) {
-	this.palette.setColors(this.thief.getPalette(image, colorCount, quality))
-	return this.palette.getAllColors()
+	return this.thief.getPalette(image, colorCount, quality)
 }
 
 
-/* 
-ColorHeist.prototype.getScheme
- */
+ 
+ColorHeist.prototype.getColorScheme = function(image, colorCount, options) {
+	// this.palette.setColors(this.thief.getPallete(image, colorCount))
+}
+ 
 
 
 
