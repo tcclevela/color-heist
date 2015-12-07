@@ -1,0 +1,25 @@
+{
+  "name": "color-heist",
+  "homepage": "https://github.com/tcclevela/color-heist",
+  "authors": [
+    "Teddy Cleveland <tcclevela@gmail.com>"
+  ],
+  "description": "Build intelligent color schemes based on an image",
+  "main": "src/color-heist.js",
+  "moduleType": [],
+  "keywords": [
+    "color",
+    "scheme"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "color-thief": "~2.0.1"
+  }
+}
