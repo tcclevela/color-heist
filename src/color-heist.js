@@ -74,7 +74,62 @@ ColorHeist.prototype.getColorScheme = function(image, colorCount, options) {
 }
  
 
+// Returns the color in the color scheme with the highest average rgb value
+ColorHeist.prototype.getLightest = function(sourceImage, colorCount, quality) {
+    if (typeof colorCount === 'undefined') {
+        colorCount = 10;
+    }
+    if (typeof quality === 'undefined' || quality < 1) {
+        quality = 10;
+    }
+    var palette = this.getPalette(sourceImage);
+    var highestMean = 0;
+    var mostNeutralColor = palette[0];
+    for (var i = 0; i < palette.length; i++) {
+        // checking for variance
+   
+      
+        var mean =  ((palette[i][0]+ palette[i][1] + palette[i][2]) /  3);
+        console.log("mean = "+mean)
+        if (highestMean < mean) {
+            highestMean = mean;
+            lightNeutral = palette[i];
+        }
 
+    };
+    console.log(lightNeutral)
+    console.log(highestMean)
+    return lightNeutral;
+
+
+}
+
+
+// Returns the color in the color scheme with the lowest average rgb value
+ColorHeist.prototype.getDarkest = function(sourceImage, colorCount, quality) {
+    if (typeof colorCount === 'undefined') {
+        colorCount = 10;
+    }
+    if (typeof quality === 'undefined' || quality < 1) {
+        quality = 10;
+    }
+    var palette = this.getPalette(sourceImage);
+    var lowestMean = 255;
+    for (var i = 0; i < palette.length; i++) {
+        var mean =  ((palette[i][0]+ palette[i][1] + palette[i][2]) /  3);
+        console.log("mean = "+mean)
+        if (lowestMean > mean) {
+            lowestMean = mean;
+            darkNeutral = palette[i];
+        }
+
+    };
+    console.log(darkNeutral)
+    console.log(lowestMean)
+    return darkNeutral;
+
+
+}
 
 /* Utility Functions
  */
