@@ -86,9 +86,7 @@ ColorHeist.prototype.getLightest = function(sourceImage, colorCount, quality) {
     var highestMean = 0;
     var mostNeutralColor = palette[0];
     for (var i = 0; i < palette.length; i++) {
-        // checking for variance
-   
-      
+
         var mean =  ((palette[i][0]+ palette[i][1] + palette[i][2]) /  3);
         console.log("mean = "+mean)
         if (highestMean < mean) {
