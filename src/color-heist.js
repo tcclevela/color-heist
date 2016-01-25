@@ -8,6 +8,26 @@
  * Emma Posamentier
  */
 
+Math.average = function(values) {
+    var sum = 0;
+
+    for(var i = 0, len = values.length; i < len; i++) {
+        sum += values[i];
+    }
+
+    return sum / values.length;
+}
+
+Math.variance = function(values) {
+    var numerator = 0,
+    average = Math.average(values);
+
+    for(var i = 0, len = values.length; i < len; i++) {
+        numerator += Math.pow((values[i] - average), 2);
+    }
+    return numerator / values.length;
+}
+
 /* * * * * * * * * * * * * * * * * * * * * *
  * Palette Class
  * * * * * * * * * * * * * * * * * * * * * *
@@ -16,17 +36,55 @@
  * built
  */
 
-var Palette = function(colors, options) {
-	this.colors = colors;
+
+var Palette = function(options) {
 	this.options = options;
 }
 
-Palette.prototype.getDominantColor = function(){  
-	return this.colors[0];
+Palette.prototype.getDominantColor = function(colors) {  
+	return colors[0];
 }
 
-Palette.prototype.getAllColors = function() {
-	return this.colors;
+Palette.prototype.getAllColors = function(colors) {
+	return colors;
+}
+
+Palette.prototype.__RGBAverage = function(colors) {
+    var i, avg, len,
+    avgs = [];
+
+    for(i = 0, len = colors.length; i < len; i++) {
+        avg = Math.average(colors[i]);
+        avgs[i] = {color: colors[i], average: avg};
+    }
+    return avgs;
+}
+
+Palette.prototype.__RGBVariance = function(colors) {
+    var i, variance, len
+    variances = [];
+
+    for(i = 0, len = colors.length; i < len; i++) {
+        variance = Math.variance(colors[i]);
+        variances[i] = {color: colors[i], variance: variance};
+    }
+    return variances
+}
+
+Palette.prototype.getLightestColors = function(colors) {
+    avgs = Palette.__RGBAverage(colors);
+    return avgs.sort(function(a, b) {return a.average < b.average}).map(function(obj) {return obj.color});
+}
+
+Palette.prototype.getDarkestColors = function(colors) {
+    avgs = this.__RGBAverage(colors);
+    return avgs.sort(function(a, b) {return a.average > b.average}).map(function(obj) {return obj.color});    
+}
+
+Palette.prototype.getVibrantColors = function(colors) {
+    var variances = this.__RGBVariance(colors);
+    return variances.sort(function(a, b) {return a.variance < b.variance}).map(function(obj) {return obj.color});
+
 }
 
 
@@ -69,13 +127,15 @@ ColorHeist.prototype.getPalette = function(image, colorCount, quality) {
 
 
  
-ColorHeist.prototype.getColorScheme = function(image, colorCount, options) {
+ColorHeist.prototype.getLightColorScheme = function(image, colorCount, options) {
+    colors = this.thief.getPalette(image, colorCount)
+    return this.palette.getVibrantColors(colors);
 	// this.palette.setColors(this.thief.getPallete(image, colorCount))
 }
  
 
 // Returns the color in the color scheme with the highest average rgb value
-ColorHeist.prototype.getLightest = function(sourceImage, colorCount, quality) {
+/*ColorHeist.prototype.getLightest = function(sourceImage, colorCount, quality) {
     if (typeof colorCount === 'undefined') {
         colorCount = 10;
     }
