@@ -31,9 +31,9 @@ Math.variance = function(values) {
 /* * * * * * * * * * * * * * * * * * * * * *
  * Palette Class
  * * * * * * * * * * * * * * * * * * * * * *
- * Manages storing of colors and provides
- * functionality on which ColorHeist is 
- * built
+ * Provides helper functions for getting
+ * specific colors and sorting colors in
+ * a specific manner.
  */
 
 
@@ -72,7 +72,7 @@ Palette.prototype.__RGBVariance = function(colors) {
 }
 
 Palette.prototype.getLightestColors = function(colors) {
-    avgs = Palette.__RGBAverage(colors);
+    avgs = this.__RGBAverage(colors);
     return avgs.sort(function(a, b) {return a.average < b.average}).map(function(obj) {return obj.color});
 }
 
@@ -84,7 +84,34 @@ Palette.prototype.getDarkestColors = function(colors) {
 Palette.prototype.getVibrantColors = function(colors) {
     var variances = this.__RGBVariance(colors);
     return variances.sort(function(a, b) {return a.variance < b.variance}).map(function(obj) {return obj.color});
+}
 
+Palette.prototype.getDullColors = function(colors) {
+    var variances = this.__RGBVariance(colors);
+    return variances.sort(function(a, b) {return a.variance > b.variance}).map(function(obj) {return obj.color});
+}
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ * ColorScheme Class
+ * * * * * * * * * * * * * * * * * * * * * *
+ * ColorScheme class returned by ColorHeist
+ * get[Light,Dark]ColorScheme functions
+ * contains details about ColorScheme,
+ * conversion functions, color mutating
+ * functions and other helpers
+ */
+
+var ColorScheme = function(colors) {
+    this.colors = colors
+    this.get = function(name) { 
+        if(typeof this.colors[name] != "undefined") {
+            var c = this.colors[name];
+            return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+        }
+        return undefined
+    }
 }
 
 
@@ -112,7 +139,6 @@ var ColorHeist = function() {
  */
 ColorHeist.prototype.getColor   = function(image, quality) {
 	return this.thief.getColor(image, quality)
-
 }
 
 /*
@@ -127,67 +153,20 @@ ColorHeist.prototype.getPalette = function(image, colorCount, quality) {
 
 
  
-ColorHeist.prototype.getLightColorScheme = function(image, colorCount, options) {
-    colors = this.thief.getPalette(image, colorCount)
-    return this.palette.getVibrantColors(colors);
-	// this.palette.setColors(this.thief.getPallete(image, colorCount))
+ColorHeist.prototype.getLightColorScheme = function(image, options) {
+    colors = this.thief.getPalette(image, 15)
+    lightest = this.palette.getLightestColors(colors).slice(0, 5);
+    darkest = this.palette.getDarkestColors(colors).slice(0, 5);
+    vibrant = this.palette.getVibrantColors(colors).slice(0, 5);
+
+    schemeInput = {
+        background: lightest[0],
+        text: darkest[0],
+        highlight: vibrant[0]
+    }
+    return new ColorScheme(schemeInput);
 }
  
-
-// Returns the color in the color scheme with the highest average rgb value
-/*ColorHeist.prototype.getLightest = function(sourceImage, colorCount, quality) {
-    if (typeof colorCount === 'undefined') {
-        colorCount = 10;
-    }
-    if (typeof quality === 'undefined' || quality < 1) {
-        quality = 10;
-    }
-    var palette = this.getPalette(sourceImage);
-    var highestMean = 0;
-    var mostNeutralColor = palette[0];
-    for (var i = 0; i < palette.length; i++) {
-
-        var mean =  ((palette[i][0]+ palette[i][1] + palette[i][2]) /  3);
-        console.log("mean = "+mean)
-        if (highestMean < mean) {
-            highestMean = mean;
-            lightNeutral = palette[i];
-        }
-
-    };
-    console.log(lightNeutral)
-    console.log(highestMean)
-    return lightNeutral;
-
-
-}
-
-
-// Returns the color in the color scheme with the lowest average rgb value
-ColorHeist.prototype.getDarkest = function(sourceImage, colorCount, quality) {
-    if (typeof colorCount === 'undefined') {
-        colorCount = 10;
-    }
-    if (typeof quality === 'undefined' || quality < 1) {
-        quality = 10;
-    }
-    var palette = this.getPalette(sourceImage);
-    var lowestMean = 255;
-    for (var i = 0; i < palette.length; i++) {
-        var mean =  ((palette[i][0]+ palette[i][1] + palette[i][2]) /  3);
-        console.log("mean = "+mean)
-        if (lowestMean > mean) {
-            lowestMean = mean;
-            darkNeutral = palette[i];
-        }
-
-    };
-    console.log(darkNeutral)
-    console.log(lowestMean)
-    return darkNeutral;
-
-
-}
 
 /* Utility Functions
  */

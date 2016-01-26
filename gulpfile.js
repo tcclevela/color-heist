@@ -1,10 +1,10 @@
 // Include Gulp
 var gulp = require('gulp');
 var mainBowerFiles = require('gulp-main-bower-files');
-var uglify = require("gulp-uglify")
-var filter = require("gulp-filter")
-var concat = require("gulp-concat")
-var sass   = require("gulp-sass")
+var uglify = require("gulp-uglify");
+var filter = require("gulp-filter");
+var concat = require("gulp-concat");
+var sass   = require("gulp-sass");
 var merge = require('merge-stream');
 // Define default destination folder
 var dest = 'dist/';
