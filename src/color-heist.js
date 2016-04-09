@@ -103,14 +103,54 @@ Palette.prototype.getDullColors = function(colors) {
  * functions and other helpers
  */
 
-var ColorScheme = function(colors) {
-    this.colors = colors
-    this.get = function(name) { 
+var ColorScheme = function(colors, schemeName) {
+    this.colors = colors;
+    this.name = schemeName
+    this.styleSheetId = "ColorHeistStyles";
+    this.stylesheets = {};
+    this.styles = document.getElementById(this.styleSheetId);
+    
+
+    this.getClassName = function(name) { 
         if(typeof this.colors[name] != "undefined") {
-            var c = this.colors[name];
-            return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+            var c = this.colors[name]["color"];
+            return this.name+"-"+name
         }
         return undefined
+    }
+
+    this.getRGB = function(name) {
+        if(typeof this.colors[name] != "undefined") {
+            var c = this.colors[name]["color"]
+            return "rgb("+c[0]+","+c[1]+","+c[2]+")"
+        }
+    }
+
+    this.write = function() {
+        var cssString = "", sheet
+        if(!document.getElementById(this.styleSheetId)) {
+            this.styles = document.createElement("div")
+            document.body.appendChild(this.styles)            
+            this.styles.setAttribute("id", this.styleSheetId);
+        }
+        if(!document.getElementById(this.name)) {
+            sheet = document.createElement("style");
+            sheet.setAttribute("id", this.name);
+            this.styles.appendChild(sheet);
+        } else {
+            sheet = document.getElementById(this.name);
+        }
+
+        var keys = Object.keys(colors);
+
+        for(var i = 0, len = keys.length; i < len; i++) {
+            var rule = "."+this.name+"-"+keys[i]+"{"+colors[keys[i]]["property"]+":"+this.getRGB(keys[i])+"}"
+            cssString += rule
+        }
+
+        sheet.innerHTML = cssString
+
+
     }
 }
 
@@ -151,20 +191,61 @@ ColorHeist.prototype.getPalette = function(image, colorCount, quality) {
 	return this.thief.getPalette(image, colorCount, quality)
 }
 
+ColorHeist.prototype.__getColorScheme = function(schemeName, lightest, darkest, vibrant) {
+    schemeInput = {
+        background: {
+            color: lightest[0],
+            property: "background"
+        },
+        backgroundAlt: {
+            color: lightest[2],
+            property: "background"
+        },
+        backgroundTextColor: {
+            color: darkest[0],
+            property: "background"
+        },
+        backgroundTextHighlight: {
+            color: vibrant[0],
+            property:"background"
+        },
+        backgroundTextHighlightAlt: {
+            color: vibrant[1],
+            property:"background"
+        },
+        text: {
+            color: darkest[0],
+            property: "color"
+        },
+        textLight: {
+            color: lightest[0],
+            property: "color"
+        },
+        textHighlight: {
+            color: vibrant[0],
+            property: "color"
+        }
+    }
 
+    scheme = new ColorScheme(schemeInput, schemeName);
+    scheme.write();
+    return scheme
+}
  
-ColorHeist.prototype.getLightColorScheme = function(image, options) {
+ColorHeist.prototype.getLightColorScheme = function(image, schemeName) {
     colors = this.thief.getPalette(image, 15)
     lightest = this.palette.getLightestColors(colors).slice(0, 5);
     darkest = this.palette.getDarkestColors(colors).slice(0, 5);
-    vibrant = this.palette.getVibrantColors(colors).slice(0, 5);
+    vibrant = this.palette.getDarkestColors(this.palette.getVibrantColors(colors).slice(0, 5));
+    return this.__getColorScheme(schemeName, lightest, darkest, vibrant)
+}
 
-    schemeInput = {
-        background: lightest[0],
-        text: darkest[0],
-        highlight: vibrant[0]
-    }
-    return new ColorScheme(schemeInput);
+ColorHeist.prototype.getDarkColorScheme = function(image, schemeName) {
+    colors = this.thief.getPalette(image, 15)
+    darkest = this.palette.getLightestColors(colors).slice(0, 5);
+    lightest = this.palette.getDarkestColors(colors).slice(0, 5);
+    vibrant = this.palette.getDarkestColors(this.palette.getVibrantColors(colors).slice(0, 5));
+    return this.__getColorScheme(schemeName, lightest, darkest, vibrant)
 }
  
 

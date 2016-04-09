@@ -1,14 +1,70 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300);
 body {
   margin: 0;
-  padding: 0; }
-
-#example-1 {
-  height: 100vh;
-  width: 100%;
   display: flex;
-  justify-content: space-around;
-  align-items: center; }
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Open Sans; }
 
-.chip {
-  height: 40px;
-  width: 40px; }
+p, h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  font-family: Open Sans;
+  padding: 0;
+  margin: 0; }
+
+#intro {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  -moz-transition: background 2s ease 2s; }
+  #intro h1 {
+    font-size: 72px;
+    -moz-transition: color 2s ease 2s; }
+  #intro p {
+    -moz-transition: color 2s ease 2s; }
+  #intro .swatches {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px; }
+    #intro .swatches .swatch {
+      height: 20px;
+      width: 70px;
+      -moz-transition: background 2s ease 2s; }
+
+.example {
+  height: 45vw;
+  width: 95vw;
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+  display: none; }
+  .example .background {
+    height: inherit;
+    width: inherit;
+    display: flex; }
+  .example .source-image {
+    width: 50%;
+    height: 45vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; }
+    .example .source-image img {
+      width: auto;
+      height: 100%; }
+  .example .aside {
+    width: 50%;
+    height: 45vw;
+    font-family: Open Sans;
+    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around; }
+    .example .aside .highlight-line {
+      height: 10px;
+      width: 70%; }
