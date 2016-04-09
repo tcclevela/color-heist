@@ -233,19 +233,19 @@ ColorHeist.prototype.__getColorScheme = function(schemeName, lightest, darkest, 
 }
  
 ColorHeist.prototype.getLightColorScheme = function(image, schemeName) {
-    colors = this.thief.getPalette(image, 15)
-    lightest = this.palette.getLightestColors(colors).slice(0, 5);
-    darkest = this.palette.getDarkestColors(colors).slice(0, 5);
+    colors = this.thief.getPalette(image, 10)
+    lightest = this.palette.getLightestColors(colors).slice(0, 3);
+    darkest = this.palette.getDarkestColors(colors).slice(0, 3);
     vibrant = this.palette.getDarkestColors(this.palette.getVibrantColors(colors).slice(0, 5));
     return this.__getColorScheme(schemeName, lightest, darkest, vibrant)
 }
 
 ColorHeist.prototype.getDarkColorScheme = function(image, schemeName) {
-    colors = this.thief.getPalette(image, 15)
-    darkest = this.palette.getLightestColors(colors).slice(0, 5);
-    lightest = this.palette.getDarkestColors(colors).slice(0, 5);
+    colors = this.thief.getPalette(image, 10)
+    lightest = this.palette.getLightestColors(colors).slice(0, 3);
+    darkest = this.palette.getDarkestColors(colors).slice(0, 3);
     vibrant = this.palette.getDarkestColors(this.palette.getVibrantColors(colors).slice(0, 5));
-    return this.__getColorScheme(schemeName, lightest, darkest, vibrant)
+    return this.__getColorScheme(schemeName, darkest, lightest, vibrant)
 }
  
 
