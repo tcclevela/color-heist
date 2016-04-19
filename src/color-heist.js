@@ -144,7 +144,7 @@ var ColorScheme = function(colorProperties, schemeName) {
         var keys = Object.keys(colorProperties);
 
         for(var i = 0, len = keys.length; i < len; i++) {
-            var rule = "."+this.name+"-"+keys[i]+"{"+colorProperties[keys[i]]["property"]+":"+this.getRGB(keys[i])+"}"
+            var rule = "."+this.name+"-"+keys[i]+"{"+colorProperties[keys[i]]["property"]+":"+this.getRGB(keys[i])+" !important}"
             cssString += rule
         }
 
